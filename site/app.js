@@ -57,7 +57,7 @@ const problemPills = [
 
 const pitchCards = [
   ['Why it matters', 'Antarctic shipping needs forward-looking risk, not static charts.'],
-  ['What we built', 'A full decision-support demo using local tracks, forecasts, and route scoring.'],
+  ['What we built', 'A decision-support demo using local tracks, forecasts, and route scoring.'],
   ['Why it is credible', 'Uses public polar data, proven benchmarks, and a physics-first fallback.']
 ];
 

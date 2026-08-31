@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iceberg Notebook | ICEWATCH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <nav class="topnav">
+    <div class="topnav-brand">
+      <span>Notebook summary</span>
+      <small>Curated trajectory exploration</small>
+    </div>
+    <div class="topnav-links">
+      <a href="./index.html">Home</a>
+      <a href="./pdf-viewer.html">Problem statement</a>
+    </div>
+  </nav>
+  <main class="page">
+    <section class="doc-card">
+      <div class="eyebrow">Iceberg analysis</div>
+      <h1 style="font-family:var(--font-display); font-size:clamp(34px, 5vw, 60px); margin:16px 0 10px;">Notebook overview</h1>
+      <p>This is a clean summary page for the iceberg notebook so the demo stays visual and understandable, instead of dumping raw notebook JSON into the browser.</p>
+      <div class="doc-toolbar">
+        <a class="btn" href="./index.html">Back to demo</a>
+      </div>
+    </section>
+
+    <section class="doc-card">
+      <h2>What the notebook is for</h2>
+      <p>The notebook explores iceberg trajectories using the BYU/NIC-style track data. It is useful for understanding how the local CSVs move over time and for testing trajectory visualization before turning it into a production model.</p>
+    </section>
+
+    <section class="doc-card">
+      <h2>What it shows visually</h2>
+      <ul>
+        <li>Iceberg position changes over time.</li>
+        <li>Scatterometer-derived coordinate patterns.</li>
+        <li>How trajectory points can be used for short-horizon drift estimation.</li>
+        <li>How track data can feed route risk and map overlays.</li>
+      </ul>
+    </section>
+
+    <section class="doc-card">
+      <h2>How it fits the demo</h2>
+      <p>The notebook is not the end product. It supports the system by providing trajectory exploration, sanity-checks for the local data, and a place to validate drift assumptions before the route-risk layer uses them.</p>
+    </section>
+  </main>
+</body>
+</html>

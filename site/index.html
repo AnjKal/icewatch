@@ -11,6 +11,19 @@
 </head>
 <body>
   <div class="backdrop"></div>
+  <nav class="topnav">
+    <div class="topnav-brand">
+      <span>ICEWATCH</span>
+      <small>Antarctic navigation intelligence</small>
+    </div>
+    <div class="topnav-links">
+      <a href="#pitch">Pitch</a>
+      <a href="#demoSection">Demo</a>
+      <a href="#datasets">Data</a>
+      <a href="#routes">Routes</a>
+      <a href="#fileMap">Files</a>
+    </div>
+  </nav>
   <header class="hero">
     <div class="eyebrow">SIH 2026 • PS 59</div>
     <h1>ICEWATCH</h1>
@@ -28,8 +41,8 @@
   <main class="shell">
     <section class="panel" id="pitch">
       <div class="panel-head">
-        <h2>Pitch summary</h2>
-        <p>What judges should remember</p>
+        <h2>Overview</h2>
+        <p>Project positioning</p>
       </div>
       <div class="pitch-grid" id="pitchGrid"></div>
     </section>
@@ -51,7 +64,7 @@
       <article class="panel">
         <div class="panel-head">
           <h2>What it shows</h2>
-          <p>Pitch-friendly story for judges</p>
+          <p>Primary capabilities</p>
         </div>
         <ul class="feature-list">
           <li>Sea-ice concentration and short-range change</li>
@@ -63,7 +76,7 @@
       <article class="panel">
         <div class="panel-head">
           <h2>How it works</h2>
-          <p>End-to-end pipeline</p>
+          <p>End-to-end workflow</p>
         </div>
         <ol class="workflow" id="workflow"></ol>
       </article>
@@ -72,7 +85,7 @@
     <section class="panel" id="architecture">
       <div class="panel-head">
         <h2>System architecture</h2>
-        <p>Data in, intelligence out</p>
+        <p>Data, inference, presentation</p>
       </div>
       <div class="arch-grid" id="archGrid"></div>
     </section>
@@ -88,7 +101,7 @@
       <article class="panel">
         <div class="panel-head">
           <h2>Alerts</h2>
-          <p>What the captain would see</p>
+          <p>Operational notifications</p>
         </div>
         <div class="demo-block" id="demoAlerts"></div>
       </article>
@@ -97,7 +110,7 @@
     <section class="panel" id="datasets">
       <div class="panel-head">
         <h2>Local datasets</h2>
-        <p>What is already in this repo</p>
+        <p>Repository data inventory</p>
       </div>
       <div class="metric-row" id="datasetMetrics"></div>
       <div class="table-wrap">
@@ -117,7 +130,7 @@
     <section class="panel" id="routes">
       <div class="panel-head">
         <h2>Route comparison</h2>
-        <p>Safe-path selection for the demo voyage</p>
+        <p>Risk-aware route ranking</p>
       </div>
       <div class="table-wrap">
         <table>
@@ -145,7 +158,7 @@
       <article class="panel">
         <div class="panel-head">
           <h2>Key features</h2>
-          <p>What we can demo confidently</p>
+          <p>Current capabilities</p>
         </div>
         <div class="feature-grid" id="featureGrid"></div>
       </article>
@@ -157,20 +170,20 @@
         <p>Useful files to keep working from</p>
       </div>
       <div class="file-grid">
-        <a class="file-card" href="../PS.pdf">
+        <a class="file-card" href="./pdf-viewer.html">
           <span class="file-kind">PDF</span>
           <strong>SIH 2026 problem statement</strong>
-          <small>Source of truth for scope and acceptance.</small>
+          <small>Open a clean in-browser viewer of the problem statement.</small>
         </a>
         <a class="file-card" href="../antarctic-nav-dashboard-redesigned.html">
           <span class="file-kind">HTML</span>
           <strong>Dashboard prototype</strong>
           <small>Existing visual direction for the demo UI.</small>
         </a>
-        <a class="file-card" href="../iceberg.ipynb">
+        <a class="file-card" href="./notebook.html">
           <span class="file-kind">Notebook</span>
           <strong>Iceberg analysis notebook</strong>
-          <small>Trajectory exploration and spatial analysis.</small>
+          <small>Curated notebook summary with outputs explained visually.</small>
         </a>
       </div>
     </section>
