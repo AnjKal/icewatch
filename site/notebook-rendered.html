@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notebook Render</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;font-family:'Inter',sans-serif;background:#07111d;color:#e8f2ff}
+    .wrap{max-width:1100px;margin:0 auto;padding:28px 24px 72px}
+    h1{font-family:'Space Grotesk',sans-serif;margin:0 0 8px}
+    .meta{color:#8ca4c3;font-family:'JetBrains Mono',monospace;font-size:12px;margin-bottom:20px}
+    .nb-cell{margin-top:16px;padding:18px;border-radius:18px;border:1px solid rgba(138,168,209,.14);background:rgba(255,255,255,.03)}
+    .nb-cell pre{margin:0;white-space:pre-wrap;word-break:break-word;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.65}
+    .nb-output{margin-top:12px;padding:14px;border-radius:14px;background:rgba(89,167,255,.08);border:1px solid rgba(89,167,255,.14);color:#dce9fb;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="meta">mpd-ex · rendered notebook</div>
+    <h1>Iceberg notebook</h1>
+    <div class="meta">This rendered copy is generated from `iceberg.ipynb` and shown inside the site viewer.</div>
+    <section class="nb-cell markdown"><pre><h1>BYU/NIC iceberg database</p><p>&lt;img align=&quot;right&quot; src=&quot;https://movingpandas.github.io/movingpandas/assets/img/movingpandas.png&quot;&gt;</p><p>[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/movingpandas/movingpandas-examples/main?filepath=2-analysis-examples/iceberg.ipynb)<br>[![IPYNB](https://img.shields.io/badge/view-ipynb-hotpink)](https://github.com/movingpandas/movingpandas-examples/blob/main/2-analysis-examples/iceberg.ipynb)<br>[![HTML](https://img.shields.io/badge/view-html-green)](https://movingpandas.github.io/movingpandas-website/2-analysis-examples/iceberg.html)</p><p>The consolidated [BYU/NIC iceberg database](https://www.scp.byu.edu/data/iceberg/) is described in the paper J.S. Budge and D.G. Long, &quot;A Comprehensive Database for Antarctic Iceberg Tracking Using Scatterometer Data,&quot; IEEE Journal of Selected Topics in Applied Earth Observations, Vol. 11, No. 2, doi:10.1109/JSTARS.2017.2784186, 2017.</p><p>#<h1>Original readme</p><p>```<br>---------------------------------------------------------<br>-   BYU MERS Consolidated Antarctic Iceberg Database    -<br>-		Jeff Budge, BYU Nov 2016                -<br>- w/revisions by D.G. Long, BYU Nov 2017, Jun 2019, Aug 2019<br>---------------------------------------------------------</p><p>This readme is intended to explain the contents the database.<br>Details about how the database is created are contained in<br>J.S. Budge and D.G. Long, &quot;A Comprehensive Database for Antarctic<br>Iceberg Tracking Using Scatterometer Data,&quot; IEEE Journal of<br>Selected Topics in Applied Earth Observations, accepted and<br>to appear, 2017. Related papers: K.M. Stuart and D.G. Long,<br>&quot;Tracking large tabular icebergs using the SeaWinds Ku-band<br>microwave scatterometer&quot;, Deep-Sea Research Part II, <br>doi:10.1016/j.dsr2.2010.11.004, Vol. 58, pp. 1285-1300, 2011.<br>D.G. Long, Jarom Ballantyne, and C. Bertoia, &quot;Is the Number of<br>Icebergs Really Increasing?&quot; EOS, Transactions of the American<br>Geophysical Union, Vol. 83, No. 42, pp. 469 &amp; 474, 15 Oct 2002.</p><p><br>FILES</p><p>Each file in the consolidated database contains information on one<br>named iceberg. The name of the iceberg is also the name of the file<br>with a .csv extension. The headers of each file show the date,<br>sensors, and sizes associated with that iceberg. A few notes:</p><p>-Each file shows only the sensors that have data available for that<br> iceberg. This means that the number of columns in each file is<br> variable.</p><p>-Each sensor has at least two columns associated with it, namely<br> &#x27;sensor_1&#x27; and &#x27;sensor_2&#x27; where &quot;sensor&quot; is replaced with the actual<br> sensor name.  &#x27;sensor_1&#x27; is the latitude and &#x27;sensor_2&#x27; is the<br> longitudinal measurement from each sensor on the given date.<br> The values of 0,0 are used for no data.</p><p>-Most sensors have a third column, &#x27;sensor_3&#x27; that is a binary flag<br> that indicates if the measurement is an observation (1) or has<br> been interpolated (0) for that day or not. Where possible, daily<br> position reports are provided by interpolating sensor observations.<br> Interpolation is only used when (1) the time gap is less than 14<br> days and (2) the spatial displacement between observation is less<br> than 3 deg latitude or longitude.  Interpolated positions that end<br> up over land are not included.</p><p>-Dates are shown in JD format, with the four digit year first followed<br> by the three digit day of the year.</p><p>-&#x27;size_1&#x27; and &#x27;size_2&#x27; show the length of the major and minor axes of<br> the iceberg on the date, as given by the NIC, in nautical miles. To<br> convert to km, multiply the value by 1.852.</p><p>-Standard NIC icebergs names begin with a, b, c, or d which gives the<br> origin quadrant. Additional icebergs were identified in scatterometer<br> data.  These unnamed icebergs are stored in files that begin with <br> sa (SASS 1978), e (ERS1/2 1992-2001), or uk (1999-present).</p><p>KNOWN ISSUES</p><p>NIC positions are derived from NIC reports.  Some inconsistencies and<br>errors exist in these reports. NIC observation dates are irregular<br>and infrequent, especially in the early days. There are occasions<br>when the NIC reports for a single iceberg seem to have been actually<br>from two different icebergs. While some corrections have been made,<br>NIC reports are generally used as is. While icebergs due not grow<br>in size, some NIC reports show size increase. This may be due to<br>(1) quantization of the reported dimensions by NIC and/or (2) variations<br>in the subjectively choosen axes used to infer dimensions.</p><p>Scatterometer sensor position estimates have gaps due to loss of data<br>and backscatter constrast, especially during summer months, but<br>typically are available on a daily basis. The iceberg center in<br>scatterometer data reports is subjectively determined based on<br>scatterometer backscatter images may not coincide with the center<br>identified in NIC reports.<br>```</pre></section><section class="nb-cell code"><pre>import pandas as pd
+import movingpandas as mpd
+import zipfile
+import warnings
+
+warnings.filterwarnings(&quot;ignore&quot;)</pre></section><section class="nb-cell code"><pre>zf = zipfile.ZipFile(&quot;../data/icebergs_v5.zip&quot;)
+df = pd.read_csv(zf.open(&quot;consol/uk319.csv&quot;))
+df[&quot;t&quot;] = pd.to_datetime(df.date, format=&quot;%Y%j&quot;)
+df</pre></section><section class="nb-cell code"><pre>traj = mpd.Trajectory(df, traj_id=1, t=&quot;t&quot;, x=&quot;ascat_2&quot;, y=&quot;ascat_1&quot;)
+traj.hvplot(
+    title=&quot;Iceberg trajectory&quot;,
+    c=&quot;ascat_3&quot;,
+    line_width=5,
+    cmap=[&quot;yellow&quot;, &quot;blue&quot;],
+    colorbar=True,
+)</pre></section><section class="nb-cell code"><pre>traj.explore(color=&quot;#ff00ff&quot;, tiles=&quot;CartoDB dark_matter&quot;, style_kwds={&quot;weight&quot;: 4})</pre></section><section class="nb-cell markdown"><pre>#<h1>Non-default projections</p><p>https://geoviews.org/user_guide/Projections.html</pre></section><section class="nb-cell code"><pre>import geoviews as gv
+import geoviews.feature as gf
+from cartopy import crs</pre></section><section class="nb-cell code"><pre>(
+    gf.coastline
+    * traj.hvplot(title=&quot;Iceberg trajectory in SouthPolarStereo&quot;, tiles=None)
+).opts(projection=crs.SouthPolarStereo())</pre></section><section class="nb-cell markdown"><pre>#<h1>Continue exploring MovingPandas</p><p>1. [Bird migration analysis](bird-migration.ipynb)<br>1. [Ship data analysis](ship-data.ipynb)<br>1. [Horse collar data exploration](horse-collar.ipynb)<br>1. [OSM traces](osm-traces.ipynb)<br>1. [Soccer game](soccer-game.ipynb)<br>1. [Mars rover &amp; heli](mars-rover.ipynb)<br>1. [Ever Given](ever-given.ipynb)<br>1. [Iceberg](iceberg.ipynb)<br>1. [Pollution data](pollution-data.ipynb)</pre></section>
+  </div>
+</body>
+</html>

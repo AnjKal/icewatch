@@ -1,6 +1,6 @@
 {
   "dataset": {
-    "track_file": "b09b.csv",
+    "track_file": "track_b09b.csv",
     "track_points": 11033,
     "first_date": 1989225,
     "last_date": 2022115,
@@ -76,7 +76,7 @@
     {
       "severity": "danger",
       "title": "Iceberg trajectory enters transit window",
-      "detail": "b09b.csv now projects into the risk corridor within 24 hours."
+      "detail": "track_b09b.csv now projects into the risk corridor within 24 hours."
     },
     {
       "severity": "caution",

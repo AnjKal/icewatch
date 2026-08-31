@@ -7,3 +7,4 @@ Set-Location $repo
 
 & $venv tools\build_manifest.py
 & $venv -m icewatch.build
+& $venv scripts\render_notebook.py
