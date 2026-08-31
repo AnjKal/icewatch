@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notebook Viewer | ICEWATCH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <nav class="topnav">
+    <div class="topnav-brand">
+      <span>Notebook viewer</span>
+      <small>Rendered from iceberg.ipynb</small>
+    </div>
+    <div class="topnav-links">
+      <a href="./index.html">Home</a>
+      <a href="./pdf-viewer.html">Problem statement</a>
+    </div>
+  </nav>
+  <main class="nb-shell">
+    <section class="doc-card">
+      <div class="eyebrow">Iceberg analysis notebook</div>
+      <h1 style="font-family:var(--font-display); font-size:clamp(34px, 5vw, 60px); margin:16px 0 10px;">Notebook rendering</h1>
+      <p>This page renders the notebook content as styled cells, so it stays readable in the browser without exposing raw JSON.</p>
+      <div class="doc-toolbar">
+        <a class="btn" href="./index.html">Back to demo</a>
+      </div>
+    </section>
+    <section class="doc-card">
+      <iframe class="embed-frame" src="./notebook-rendered.html" title="Rendered notebook"></iframe>
+    </section>
+  </main>
+</body>
+</html>
