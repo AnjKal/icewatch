@@ -87,7 +87,68 @@
         <h2>System architecture</h2>
         <p>Data, inference, presentation</p>
       </div>
-      <div class="arch-grid" id="archGrid"></div>
+      <div class="architecture-layout">
+        <div class="architecture-diagram">
+          <svg viewBox="0 0 1200 460" role="img" aria-label="ICEWATCH architecture diagram">
+            <defs>
+              <linearGradient id="flow" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#59a7ff" stop-opacity="0.95"/>
+                <stop offset="100%" stop-color="#7bdbb2" stop-opacity="0.95"/>
+              </linearGradient>
+              <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="6" result="blur"/>
+                <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.2 0 1 0 0 0.5 0 0 1 0 0.7 0 0 0 18 -8"/>
+                <feBlend in="SourceGraphic"/>
+              </filter>
+            </defs>
+            <g class="flow-lines" filter="url(#softGlow)">
+              <line x1="194" y1="116" x2="300" y2="116" stroke="url(#flow)" stroke-width="3"/>
+              <line x1="414" y1="116" x2="520" y2="116" stroke="url(#flow)" stroke-width="3"/>
+              <line x1="634" y1="116" x2="740" y2="116" stroke="url(#flow)" stroke-width="3"/>
+              <line x1="854" y1="116" x2="960" y2="116" stroke="url(#flow)" stroke-width="3"/>
+              <line x1="600" y1="190" x2="600" y2="270" stroke="url(#flow)" stroke-width="3"/>
+              <line x1="380" y1="308" x2="720" y2="308" stroke="url(#flow)" stroke-width="3"/>
+            </g>
+            <g class="layer-box">
+              <rect x="30" y="60" rx="20" ry="20" width="164" height="112"/>
+              <text x="112" y="98" text-anchor="middle">Inputs</text>
+              <text x="112" y="127" text-anchor="middle">Satellite, weather</text>
+              <text x="112" y="149" text-anchor="middle">ocean, local tracks</text>
+            </g>
+            <g class="layer-box">
+              <rect x="300" y="60" rx="20" ry="20" width="164" height="112"/>
+              <text x="382" y="98" text-anchor="middle">Ingestion</text>
+              <text x="382" y="127" text-anchor="middle">CSV loader</text>
+              <text x="382" y="149" text-anchor="middle">feature normalizer</text>
+            </g>
+            <g class="layer-box">
+              <rect x="520" y="60" rx="20" ry="20" width="164" height="112"/>
+              <text x="602" y="98" text-anchor="middle">Forecasting</text>
+              <text x="602" y="127" text-anchor="middle">drift baseline</text>
+              <text x="602" y="149" text-anchor="middle">sea-ice trend</text>
+            </g>
+            <g class="layer-box">
+              <rect x="740" y="60" rx="20" ry="20" width="164" height="112"/>
+              <text x="822" y="98" text-anchor="middle">Risk engine</text>
+              <text x="822" y="127" text-anchor="middle">graph scoring</text>
+              <text x="822" y="149" text-anchor="middle">route ranking</text>
+            </g>
+            <g class="layer-box">
+              <rect x="960" y="60" rx="20" ry="20" width="164" height="112"/>
+              <text x="1042" y="98" text-anchor="middle">Presentation</text>
+              <text x="1042" y="127" text-anchor="middle">dashboard</text>
+              <text x="1042" y="149" text-anchor="middle">PDF / notebook</text>
+            </g>
+            <g class="layer-box alt">
+              <rect x="300" y="228" rx="20" ry="20" width="540" height="112"/>
+              <text x="570" y="266" text-anchor="middle">Decision outputs</text>
+              <text x="570" y="295" text-anchor="middle">shortest safe route · route warnings · confidence · alert feed</text>
+              <text x="570" y="317" text-anchor="middle">human-in-the-loop navigation support</text>
+            </g>
+          </svg>
+        </div>
+        <div class="arch-grid" id="archGrid"></div>
+      </div>
     </section>
 
     <section class="grid-2" id="demoSection">

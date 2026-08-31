@@ -100,6 +100,22 @@ a{color:inherit; text-decoration:none}
 }
 .callout p{margin:0}
 .pitch-grid,.arch-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px}
+.architecture-layout{display:grid; gap:18px}
+.architecture-diagram{
+  border-radius:20px; border:1px solid rgba(138,168,209,.14); background:rgba(255,255,255,.02);
+  padding:18px; overflow:hidden;
+}
+.architecture-diagram svg{width:100%; height:auto; display:block}
+.layer-box rect{
+  fill:rgba(10,24,38,.92); stroke:rgba(138,168,209,.2); stroke-width:1.5;
+}
+.layer-box text{
+  fill:var(--text); font-family:var(--font-mono); font-size:17px; letter-spacing:.02em;
+}
+.layer-box text:nth-of-type(2), .layer-box text:nth-of-type(3){ fill:var(--muted); font-size:12px; }
+.layer-box.alt rect{
+  fill:rgba(89,167,255,.08);
+}
 .pitch-card,.arch-card{
   padding:18px; border-radius:16px; background:rgba(255,255,255,.03); border:1px solid rgba(138,168,209,.14)
 }

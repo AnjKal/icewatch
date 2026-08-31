@@ -62,9 +62,12 @@ const pitchCards = [
 ];
 
 const architectureCards = [
-  ['Data layer', 'Local iceberg CSVs, sea-ice references, and external weather/ocean sources.'],
-  ['Inference layer', 'Track extrapolation, sea-ice risk estimation, and route ranking.'],
-  ['Presentation layer', 'A polished pitch site with dataset proofs, outputs, and demo narratives.']
+  ['Inputs', 'Satellite imagery, weather forcing, ocean state, and iceberg track archives.'],
+  ['Processing', 'CSV parsing, feature normalization, and trajectory preparation.'],
+  ['Models', 'Drift extrapolation, sea-ice risk estimation, and route scoring.'],
+  ['Decision layer', 'Risk ranking, confidence, and operational alert generation.'],
+  ['Interface', 'Pitch site, PDF viewer, notebook summary, and route comparison panels.'],
+  ['Future services', 'Live data connectors, trained models, and richer map overlays.']
 ];
 
 async function loadManifest() {
