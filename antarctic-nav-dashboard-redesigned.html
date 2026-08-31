@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICEWATCH — Antarctic Maritime Decision Support</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a1a2b; --bg-elev:#0e2338; --bg-elev-2:#123049; --bg-elev-3:#173a5c;
+    --border:#1e3a56; --border-soft:#16304a;
+    --text:#e7f1fb; --text-dim:#8fa9c4; --text-faint:#5d7793;
+    --accent:#3d94ff; --accent-dim:#2a6fcc; --accent-soft:rgba(61,148,255,0.14); --accent-soft-2:rgba(61,148,255,0.28);
+    --safe:#3ecf8e; --safe-bg:rgba(62,207,142,0.13);
+    --caution:#e8b64c; --caution-bg:rgba(232,182,76,0.13);
+    --danger:#ea5f6e; --danger-bg:rgba(234,95,110,0.14);
+    --radius-sm:6px; --radius:10px; --radius-lg:16px;
+    --font-display:'Space Grotesk',sans-serif; --font-body:'Inter',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  }
+  html[data-theme="light"]{
+    --bg:#eef3f9; --bg-elev:#ffffff; --bg-elev-2:#f4f8fc; --bg-elev-3:#e9f0f8;
+    --border:#d7e2ee; --border-soft:#e3ebf3;
+    --text:#0e2338; --text-dim:#4d647c; --text-faint:#8ba0b6;
+    --accent:#1f6fe0; --accent-dim:#1858b3; --accent-soft:rgba(31,111,224,0.08); --accent-soft-2:rgba(31,111,224,0.16);
+    --safe:#1f9d68; --safe-bg:rgba(31,157,104,0.09);
+    --caution:#b8790a; --caution-bg:rgba(184,121,10,0.09);
+    --danger:#cc3f4f; --danger-bg:rgba(204,63,79,0.09);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg); color:var(--text); font-family:var(--font-body);
+    display:block; min-height:100vh; -webkit-font-smoothing:antialiased;
+    transition:background .25s ease, color .25s ease;
+  }
+  ::selection{ background:var(--accent-soft-2); }
+  a{color:inherit;}
+
+  /* ---------- Header / screen navigation ---------- */
+  .sidebar{
+    width:100%; height:auto; position:sticky; top:0; z-index:10;
+    background:var(--bg-elev); border-right:0; border-bottom:1px solid var(--border);
+    display:flex; flex-direction:column; padding:12px 24px 0;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; padding:4px 4px 12px; }
+  .brand-mark{ width:30px; height:30px; border-radius:5px; background:var(--accent-soft);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .brand-mark svg{ width:17px; height:17px; }
+  .brand-text h1{ font-family:var(--font-display); font-size:15px; font-weight:700; letter-spacing:0.02em; }
+  .brand-text p{ font-size:9.5px; color:var(--text-faint); font-family:var(--font-mono); letter-spacing:0.04em; margin-top:1px;}
+  nav{ display:flex; flex-direction:row; gap:0; overflow-x:auto; border-top:1px solid var(--border-soft); }
+  .nav-item{
+    display:flex; align-items:center; gap:8px; padding:11px 18px; border-radius:0;
+    color:var(--text-dim); font-size:12px; font-weight:600; cursor:pointer; border:0;
+    border-bottom:2px solid transparent; transition:color .15s ease, border-color .15s ease;
+    white-space:nowrap;
+  }
+  .nav-item svg{ width:15px; height:15px; flex-shrink:0; opacity:0.75; }
+  .nav-item:hover{ background:transparent; color:var(--text); }
+  .nav-item.active{ background:transparent; color:var(--accent); border-bottom-color:var(--accent); }
+  .nav-item.active svg{ opacity:1; }
+  .sidebar-foot{ position:absolute; right:24px; top:13px; padding:0; border:0; }
+  .vessel-mini{ font-family:var(--font-mono); font-size:9.5px; color:var(--text-faint); line-height:1.45; text-align:right; }
+  .vessel-mini b{ color:var(--text-dim); font-weight:500; }
+  /* ---------- Main ---------- */
+  .main{ width:100%; min-width:0; display:flex; flex-direction:column; }
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; padding:18px 32px;
+    border-bottom:1px solid var(--border); background:var(--bg);
+    position:relative; z-index:1;
+  }
+  .topbar h2{ font-family:var(--font-display); font-size:19px; font-weight:600; }
+  .topbar .subtitle{ font-size:12.5px; color:var(--text-faint); margin-top:2px; }
+  .topbar-right{ display:flex; align-items:center; gap:14px; }
+
+  .status-pill{
+    display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:11.5px;
+    color:var(--text-dim); background:var(--bg-elev-2); border:1px solid var(--border);
+    padding:6px 10px; border-radius:2px;
+  }
+  .status-dot{ width:7px; height:7px; border-radius:50%; background:var(--safe); box-shadow:0 0 0 3px var(--safe-bg); }
+
+  .theme-toggle{
+    width:38px; height:38px; border-radius:50%; border:1px solid var(--border); background:var(--bg-elev-2);
+    display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text-dim);
+    transition:background .15s ease, color .15s ease;
+  }
+  .theme-toggle:hover{ background:var(--bg-elev-3); color:var(--accent); }
+  .theme-toggle svg{ width:17px; height:17px; }
+
+  .page{ display:none; padding:28px 32px 48px; }
+  .page.active{ display:block; }
+
+  /* ---------- Generic building blocks ---------- */
+  .card{ background:var(--bg-elev); border:1px solid var(--border); border-radius:0; padding:20px 22px; }
+  .card-title{ font-family:var(--font-display); font-size:14px; font-weight:600; letter-spacing:0.01em; }
+  .card-sub{ font-size:11.5px; color:var(--text-faint); margin-top:2px; }
+  .card-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+
+  .grid-4{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .grid-2{ display:grid; grid-template-columns:1.15fr 0.85fr; gap:16px; }
+  .grid-2b{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+  .stat-card{ background:var(--bg-elev); border:1px solid var(--border); border-radius:0; padding:17px 19px; }
+  .stat-label{ font-size:11.5px; color:var(--text-faint); font-weight:500; text-transform:uppercase; letter-spacing:0.04em; }
+  .stat-value{ font-family:var(--font-display); font-size:27px; font-weight:700; margin-top:8px; }
+  .stat-value span{ font-size:14px; color:var(--text-faint); font-weight:500; margin-left:3px;}
+  .stat-delta{ font-size:11.5px; margin-top:6px; font-family:var(--font-mono); display:flex; align-items:center; gap:4px;}
+  .up{ color:var(--caution); } .down{ color:var(--safe); } .flat{ color:var(--text-faint); }
+
+  .badge{ font-size:10.5px; font-weight:600; padding:3px 8px; border-radius:2px; text-transform:uppercase; letter-spacing:0.03em; }
+  .badge.safe{ background:var(--safe-bg); color:var(--safe); }
+  .badge.caution{ background:var(--caution-bg); color:var(--caution); }
+  .badge.danger{ background:var(--danger-bg); color:var(--danger); }
+
+  .btn{
+    font-family:var(--font-body); font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:2px;
+    border:1px solid var(--border); background:var(--bg-elev-2); color:var(--text-dim); cursor:pointer;
+    transition:all .15s ease;
+  }
+  .btn:hover{ border-color:var(--accent-soft-2); color:var(--text); }
+  .btn.primary{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .btn.primary:hover{ background:var(--accent-dim); }
+
+  /* ---------- Radar (signature element) ---------- */
+  .radar-wrap{ display:flex; align-items:center; justify-content:center; position:relative; width:220px; height:220px; margin:0 auto; }
+  .radar-face{
+    width:220px; height:220px; border-radius:50%; position:relative; overflow:hidden;
+    background:radial-gradient(circle, var(--bg-elev-2) 0%, var(--bg-elev) 70%);
+    border:1px solid var(--border);
+  }
+  .radar-ring{ position:absolute; border:1px solid var(--border-soft); border-radius:50%; top:50%; left:50%; transform:translate(-50%,-50%); }
+  .radar-sweep{
+    position:absolute; top:50%; left:50%; width:50%; height:2px; transform-origin:0 50%;
+    background:linear-gradient(90deg, transparent, var(--accent) 85%);
+    animation:sweep 4s linear infinite;
+  }
+  @keyframes sweep{ from{ transform:rotate(0deg);} to{ transform:rotate(360deg);} }
+  .radar-blip{ position:absolute; width:8px; height:8px; border-radius:50%; transform:translate(-50%,-50%); }
+  .radar-blip::after{ content:''; position:absolute; inset:-5px; border-radius:50%; opacity:.35; background:inherit; }
+  .radar-center{ position:absolute; top:50%; left:50%; width:6px; height:6px; border-radius:50%; background:var(--text-dim); transform:translate(-50%,-50%); }
+  @media (prefers-reduced-motion: reduce){ .radar-sweep{ animation:none; transform:rotate(45deg); } }
+
+  /* ---------- Risk grid ---------- */
+  .risk-grid{ display:grid; grid-template-columns:repeat(10,1fr); gap:4px; }
+  .risk-cell{ aspect-ratio:1; border-radius:0; position:relative; }
+  .risk-cell.ship::after{ content:'▲'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--text); }
+  .risk-cell.berg::after{ content:'◆'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:9px; color:var(--bg); }
+  .risk-legend{ display:flex; gap:16px; margin-top:14px; flex-wrap:wrap; }
+  .risk-legend div{ display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--text-dim); }
+  .risk-swatch{ width:10px; height:10px; border-radius:0; }
+
+  /* ---------- AI recommendation banner ---------- */
+  .ai-banner{
+    background:var(--accent-soft); border:1px solid var(--accent-soft-2); border-radius:0;
+    padding:18px 20px; display:flex; gap:14px; align-items:flex-start;
+  }
+  .ai-banner svg{ width:19px; height:19px; color:var(--accent); flex-shrink:0; margin-top:2px; }
+  .ai-banner .label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--accent); }
+  .ai-banner p{ font-size:13.5px; color:var(--text); margin-top:5px; line-height:1.5; }
+  .ai-banner .meta{ font-size:11.5px; color:var(--text-faint); margin-top:9px; font-family:var(--font-mono); }
+
+  /* ---------- Chart ---------- */
+  .chart-svg{ width:100%; height:auto; display:block; }
+  .chart-axis-label{ font-size:10px; fill:var(--text-faint); font-family:var(--font-mono); }
+
+  /* ---------- Tables ---------- */
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
+  th{ text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-faint); font-weight:600; padding:0 12px 10px; border-bottom:1px solid var(--border); }
+  td{ padding:12px; border-bottom:1px solid var(--border-soft); color:var(--text-dim); }
+  td.mono{ font-family:var(--font-mono); font-size:12px; color:var(--text); }
+  tr.row{ cursor:pointer; transition:background .12s ease; }
+  tr.row:hover{ background:var(--bg-elev-2); }
+  tr.row.selected{ background:var(--accent-soft); }
+  tr.row td:first-child{ color:var(--text); font-weight:500; }
+
+  /* ---------- Alerts feed ---------- */
+  .alert-item{ display:flex; gap:14px; padding:16px 0; border-bottom:1px solid var(--border-soft); }
+  .alert-item:last-child{ border-bottom:none; }
+  .alert-dot{ width:9px; height:9px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+  .alert-body p.title{ font-size:13.5px; font-weight:500; color:var(--text); }
+  .alert-body p.desc{ font-size:12.5px; color:var(--text-dim); margin-top:4px; line-height:1.5; }
+  .alert-body p.time{ font-size:11px; color:var(--text-faint); margin-top:6px; font-family:var(--font-mono); }
+
+  /* ---------- Sliders (route planner) ---------- */
+  .slider-row{ margin-bottom:18px; }
+  .slider-row-head{ display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:8px; }
+  .slider-row-head span:first-child{ color:var(--text-dim); font-weight:500; }
+  .slider-row-head span:last-child{ font-family:var(--font-mono); color:var(--accent); font-weight:500; }
+  input[type=range]{
+    -webkit-appearance:none; width:100%; height:4px; border-radius:2px; background:var(--bg-elev-3); outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:var(--accent);
+    cursor:pointer; border:3px solid var(--bg-elev); box-shadow:0 0 0 1px var(--accent);
+  }
+
+  .route-map{ position:relative; background:var(--bg-elev-2); border-radius:0; overflow:hidden; }
+
+  .divider{ height:1px; background:var(--border-soft); margin:18px 0; }
+
+  ::-webkit-scrollbar{ width:9px; height:9px; }
+  ::-webkit-scrollbar-thumb{ background:var(--border); border-radius:5px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+
+  @media (max-width:980px){
+    .sidebar-foot{position:static; margin-left:auto; margin-top:-43px; margin-bottom:10px;}
+    .grid-4{ grid-template-columns:repeat(2,1fr); }
+    .grid-2, .grid-2b{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--accent)"><path d="M3 17c1.5 1.3 3 1.3 4.5 0s3-1.3 4.5 0 3 1.3 4.5 0 3-1.3 4.5 0"/><path d="M12 3v9M8 8l4-5 4 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="brand-text">
+      <h1>ICEWATCH</h1>
+      <p>ANTARCTIC MARITIME AI</p>
+    </div>
+  </div>
+
+  <nav id="nav">
+    <div class="nav-item active" data-page="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="9" rx="1.2"/><rect x="14" y="3" width="7" height="5" rx="1.2"/><rect x="14" y="12" width="7" height="9" rx="1.2"/><rect x="3" y="16" width="7" height="5" rx="1.2"/></svg>
+      Overview
+    </div>
+    <div class="nav-item" data-page="seaice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 2v20M4.5 5.5l15 13M19.5 5.5l-15 13M2 12h20M6 8l6 4-6 4M18 8l-6 4 6 4"/></svg>
+      Sea ice
+    </div>
+    <div class="nav-item" data-page="icebergs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2l4 8-4 4-4-4 4-8z"/><path d="M8 14l-3 8h14l-3-8"/></svg>
+      Icebergs
+    </div>
+    <div class="nav-item" data-page="route">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="5" r="2.2"/><path d="M6 16.8V13a4 4 0 0 1 4-4h2a4 4 0 0 0 4-4"/></svg>
+      Route planner
+    </div>
+    <div class="nav-item" data-page="alerts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+      Alerts log
+    </div>
+  </nav>
+
+  <div class="sidebar-foot">
+    <div class="vessel-mini">
+      <b>RVCE 6OClock Antarctic Explorer</b><br>
+      68.24°S · 78.41°E<br>
+      Heading 214° · 11.2 kn
+    </div>
+  </div>
+</aside>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+
+  <div class="topbar">
+    <div>
+      <h2 id="page-title">Mission overview</h2>
+      <p class="subtitle" id="page-subtitle">Live conditions and AI-generated routing guidance</p>
+    </div>
+    <div class="topbar-right">
+      <div class="status-pill"><span class="status-dot"></span> All systems nominal · updated 3 min ago</div>
+      <div class="theme-toggle" id="themeToggle" title="Toggle light / dark mode">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PAGE: DASHBOARD ============ -->
+  <section class="page active" id="page-dashboard">
+
+    <div class="grid-4" style="margin-bottom:16px;">
+      <div class="stat-card">
+        <div class="stat-label">Sea ice concentration</div>
+        <div class="stat-value">68<span>%</span></div>
+        <div class="stat-delta up">▲ 4% forecast next 36h</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Icebergs tracked</div>
+        <div class="stat-value">17</div>
+        <div class="stat-delta"><span class="badge danger">3 high risk</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Wind / visibility</div>
+        <div class="stat-value">25<span>kn</span></div>
+        <div class="stat-delta flat">Visibility 8.0 km</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Route status</div>
+        <div class="stat-value" style="font-size:20px; color:var(--safe);">Safe corridor</div>
+        <div class="stat-delta flat">ETA 14h 20m</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:16px; align-items:stretch;">
+
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">Regional risk map</div><div class="card-sub">Composite of ice concentration, iceberg proximity and forecast uncertainty</div></div>
+        </div>
+        <div class="risk-grid" id="riskGrid"></div>
+        <div class="risk-legend">
+          <div><span class="risk-swatch" style="background:var(--safe)"></span>Low risk</div>
+          <div><span class="risk-swatch" style="background:var(--caution)"></span>Moderate</div>
+          <div><span class="risk-swatch" style="background:var(--danger)"></span>High risk</div>
+          <div><span class="risk-swatch" style="background:var(--bg-elev-3)"></span>◆ Iceberg &nbsp;▲ Vessel</div>
+        </div>
+      </div>
+
+      <div class="card" style="display:flex; flex-direction:column;">
+        <div class="card-head">
+          <div><div class="card-title">Vessel radar</div><div class="card-sub">Live contact sweep, 12 nm range</div></div>
+        </div>
+        <div class="radar-wrap">
+          <div class="radar-face">
+            <div class="radar-ring" style="width:44px; height:44px;"></div>
+            <div class="radar-ring" style="width:98px; height:98px;"></div>
+            <div class="radar-ring" style="width:152px; height:152px;"></div>
+            <div class="radar-ring" style="width:206px; height:206px;"></div>
+            <div class="radar-sweep"></div>
+            <div class="radar-center"></div>
+            <div class="radar-blip" style="top:38%; left:63%; background:var(--danger);"></div>
+            <div class="radar-blip" style="top:70%; left:58%; background:var(--caution);"></div>
+            <div class="radar-blip" style="top:30%; left:32%; background:var(--caution);"></div>
+            <div class="radar-blip" style="top:55%; left:20%; background:var(--safe);"></div>
+          </div>
+        </div>
+        <div class="risk-legend" style="justify-content:center; margin-top:16px;">
+          <div><span class="risk-swatch" style="background:var(--danger)"></span>Confirmed berg</div>
+          <div><span class="risk-swatch" style="background:var(--caution)"></span>Probable</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2b">
+      <div class="ai-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.8 5.6L19 9l-5.2 1.4L12 16l-1.8-5.6L5 9l5.2-1.4L12 2z"/><path d="M19 15l.8 2.4L22 18l-2.2.6L19 21l-.8-2.4L16 18l2.2-.6L19 15z"/></svg>
+        <div>
+          <div class="label">AI recommendation</div>
+          <p>Current heading intersects a predicted high-density ice zone in approximately 11 hours. Route&nbsp;B reduces forecast ice and iceberg exposure by 63% for an additional 18&nbsp;km of travel.</p>
+          <div class="meta">Confidence: 87% · Model: spatiotemporal drift ensemble · Recalculated 3 min ago</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">Recent activity</div><div class="card-sub">Latest system alerts</div></div>
+          <div class="btn" data-page="alerts" style="cursor:pointer;">View log</div>
+        </div>
+        <div class="alert-item">
+          <div class="alert-dot" style="background:var(--danger)"></div>
+          <div class="alert-body">
+            <p class="title">Iceberg B-2214 drift accelerating</p>
+            <p class="time">08:42 UTC</p>
+          </div>
+        </div>
+        <div class="alert-item">
+          <div class="alert-dot" style="background:var(--caution)"></div>
+          <div class="alert-body">
+            <p class="title">Sea ice concentration rising in sector 4</p>
+            <p class="time">06:15 UTC</p>
+          </div>
+        </div>
+        <div class="alert-item">
+          <div class="alert-dot" style="background:var(--safe)"></div>
+          <div class="alert-body">
+            <p class="title">Route B confirmed clear for next 24h</p>
+            <p class="time">03:50 UTC</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PAGE: SEA ICE ============ -->
+  <section class="page" id="page-seaice">
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">Ice concentration — 7 day forecast</div><div class="card-sub">Sector average, percentage cover</div></div>
+        </div>
+        <svg class="chart-svg" viewBox="0 0 560 220" id="forecastChart"></svg>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">By sector</div><div class="card-sub">Current concentration</div></div>
+        </div>
+        <div id="sectorList"></div>
+      </div>
+    </div>
+
+    <div class="grid-2b">
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">30-day historical trend</div><div class="card-sub">Concentration vs. seasonal average</div></div>
+        </div>
+        <svg class="chart-svg" viewBox="0 0 560 200" id="historyChart"></svg>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">Detection detail</div><div class="card-sub">Latest satellite pass</div></div>
+        </div>
+        <table>
+          <tr><td style="color:var(--text-faint)">Source</td><td class="mono">Sentinel-1 SAR</td></tr>
+          <tr><td style="color:var(--text-faint)">Pass time</td><td class="mono">2026-08-24 07:52 UTC</td></tr>
+          <tr><td style="color:var(--text-faint)">Coverage</td><td class="mono">210 × 340 km</td></tr>
+          <tr><td style="color:var(--text-faint)">Mean concentration</td><td class="mono">68.4%</td></tr>
+          <tr><td style="color:var(--text-faint)">Model uncertainty</td><td class="mono">± 6.2%</td></tr>
+          <tr><td style="color:var(--text-faint);border-bottom:none;">Next pass</td><td class="mono" style="border-bottom:none;">in 3h 08m</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PAGE: ICEBERGS ============ -->
+  <section class="page" id="page-icebergs">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">Tracked icebergs</div><div class="card-sub">17 objects · updated 3 min ago</div></div>
+        </div>
+        <table>
+          <thead><tr><th>ID</th><th>Position</th><th>Size class</th><th>Drift</th><th>Risk</th></tr></thead>
+          <tbody id="bergTable"></tbody>
+        </table>
+      </div>
+
+      <div class="card" id="bergDetail">
+        <div class="card-head">
+          <div><div class="card-title" id="bergDetailTitle">B-2214</div><div class="card-sub">Trajectory detail</div></div>
+          <span class="badge danger" id="bergDetailBadge">High risk</span>
+        </div>
+        <svg class="chart-svg" viewBox="0 0 300 180" id="bergTrajChart"></svg>
+        <div class="divider"></div>
+        <table>
+          <tr><td style="color:var(--text-faint)">Coordinates</td><td class="mono" id="bergCoord">−65.21, 72.84</td></tr>
+          <tr><td style="color:var(--text-faint)">Drift speed</td><td class="mono" id="bergSpeed">1.8 km/h NE</td></tr>
+          <tr><td style="color:var(--text-faint)">Route intersection</td><td class="mono" id="bergProb">72% within 24h</td></tr>
+          <tr><td style="color:var(--text-faint);border-bottom:none;">Predicted radius</td><td class="mono" id="bergRadius" style="border-bottom:none;">± 4.1 km</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PAGE: ROUTE PLANNER ============ -->
+  <section class="page" id="page-route">
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">Route comparison</div><div class="card-sub">Start: 68.10°S 76.90°E → Destination: 70.40°S 82.20°E</div></div>
+        </div>
+        <div class="route-map">
+          <svg class="chart-svg" viewBox="0 0 560 300" id="routeMap"></svg>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Planning priorities</div></div>
+        <div class="slider-row">
+          <div class="slider-row-head"><span>Time priority</span><span id="wTimeVal">50</span></div>
+          <input type="range" min="0" max="100" value="50" id="wTime">
+        </div>
+        <div class="slider-row">
+          <div class="slider-row-head"><span>Fuel efficiency</span><span id="wFuelVal">50</span></div>
+          <input type="range" min="0" max="100" value="50" id="wFuel">
+        </div>
+        <div class="slider-row">
+          <div class="slider-row-head"><span>Safety margin</span><span id="wSafeVal">70</span></div>
+          <input type="range" min="0" max="100" value="70" id="wSafe">
+        </div>
+        <div class="divider"></div>
+        <div class="card-sub" style="margin-bottom:8px;">Recommended</div>
+        <div class="stat-value" id="recommendedRoute" style="font-size:22px; color:var(--accent);">Route B</div>
+        <div class="stat-delta flat" id="recommendedReason">Weighted toward safety — lowest combined ice and iceberg exposure.</div>
+      </div>
+    </div>
+
+    <div class="grid-2b">
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">Route A</div><div class="card-sub">Direct heading</div></div>
+          <span class="badge danger">Elevated risk</span>
+        </div>
+        <table>
+          <tr><td style="color:var(--text-faint)">Distance</td><td class="mono">246 km</td></tr>
+          <tr><td style="color:var(--text-faint)">ETA</td><td class="mono">12h 40m</td></tr>
+          <tr><td style="color:var(--text-faint)">Fuel estimate</td><td class="mono">18.2 t</td></tr>
+          <tr><td style="color:var(--text-faint);border-bottom:none;">Ice / iceberg exposure</td><td class="mono" style="border-bottom:none; color:var(--danger);">High — sector 4 & 7</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">Route B</div><div class="card-sub">Northern detour</div></div>
+          <span class="badge safe">Safe corridor</span>
+        </div>
+        <table>
+          <tr><td style="color:var(--text-faint)">Distance</td><td class="mono">264 km</td></tr>
+          <tr><td style="color:var(--text-faint)">ETA</td><td class="mono">14h 20m</td></tr>
+          <tr><td style="color:var(--text-faint)">Fuel estimate</td><td class="mono">19.6 t</td></tr>
+          <tr><td style="color:var(--text-faint);border-bottom:none;">Ice / iceberg exposure</td><td class="mono" style="border-bottom:none; color:var(--safe);">Low — clear for 24h</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PAGE: ALERTS ============ -->
+  <section class="page" id="page-alerts">
+    <div class="card">
+      <div class="card-head">
+        <div><div class="card-title">Alerts & recommendations log</div><div class="card-sub">Chronological, most recent first</div></div>
+      </div>
+      <div id="alertsFull"></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  /* ---------------- Theme toggle ---------------- */
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  function setThemeIcon(theme){
+    themeIcon.innerHTML = theme === 'dark'
+      ? '<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>'
+      : '<circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/>';
+  }
+  setThemeIcon('dark');
+  themeToggle.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    setThemeIcon(next);
+  });
+
+  /* ---------------- Navigation ---------------- */
+  const titles = {
+    dashboard: ['SCREEN 1 — Mission overview', 'Live conditions and AI-generated routing guidance'],
+    seaice: ['SCREEN 2 — Sea ice monitor', 'Concentration, forecasts and satellite detection detail'],
+    icebergs: ['SCREEN 3 — Iceberg tracker', 'Positions, drift trajectories and route-intersection risk'],
+    route: ['SCREEN 4 — Route planner', 'Compare routes and weight planning priorities'],
+    alerts: ['SCREEN 5 — Alerts log', 'Full history of system alerts and recommendations']
+  };
+  function goTo(page){
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
+    document.getElementById('page-title').textContent = titles[page][0];
+    document.getElementById('page-subtitle').textContent = titles[page][1];
+  }
+  document.querySelectorAll('[data-page]').forEach(el => {
+    el.addEventListener('click', () => goTo(el.dataset.page));
+  });
+
+  /* ---------------- Risk grid (Overview) ---------------- */
+  const riskGrid = document.getElementById('riskGrid');
+  const riskSeed = [
+    1,1,1,2,2,1,1,1,1,1,
+    1,1,2,2,3,2,1,1,1,1,
+    1,2,2,3,3,3,2,1,1,1,
+    1,1,2,3,'B',3,2,1,1,1,
+    1,1,1,2,3,'S',1,1,1,1,
+    1,1,1,1,2,2,1,1,1,1
+  ];
+  const riskColor = { 1:'var(--safe)', 2:'var(--caution)', 3:'var(--danger)' };
+  riskSeed.forEach(v => {
+    const cell = document.createElement('div');
+    if(v === 'B'){ cell.className='risk-cell berg'; cell.style.background='var(--danger)'; }
+    else if(v === 'S'){ cell.className='risk-cell ship'; cell.style.background='var(--bg-elev-3)'; }
+    else { cell.className='risk-cell'; cell.style.background=riskColor[v]; cell.style.opacity = v===1?0.55:v===2?0.75:0.9; }
+    riskGrid.appendChild(cell);
+  });
+
+  /* ---------------- Sea ice: 7-day forecast line chart ---------------- */
+  function lineChart(svgId, data, color, yMax){
+    const svg = document.getElementById(svgId);
+    const W=560,H=svgId==='historyChart'?200:220, padL=34,padR=14,padT=16,padB=26;
+    const w=W-padL-padR, h=H-padT-padB;
+    const max = yMax || Math.max(...data)*1.15;
+    const stepX = w/(data.length-1);
+    let path='', area=`M${padL},${H-padB} `;
+    data.forEach((d,i)=>{
+      const x=padL+i*stepX, y=padT+h-(d/max)*h;
+      path += (i===0?'M':'L')+x+','+y+' ';
+      area += `L${x},${y} `;
+    });
+    area += `L${padL+w},${H-padB} Z`;
+    let grid='';
+    for(let g=0;g<=3;g++){
+      const gy = padT + h - (g/3)*h;
+      grid += `<line x1="${padL}" y1="${gy}" x2="${padL+w}" y2="${gy}" stroke="var(--border-soft)" stroke-width="1"/>`;
+      grid += `<text class="chart-axis-label" x="4" y="${gy+3}">${Math.round((g/3)*max)}</text>`;
+    }
+    svg.innerHTML = `${grid}
+      <path d="${area}" fill="${color}" opacity="0.12"/>
+      <path d="${path}" fill="none" stroke="${color}" stroke-width="2"/>
+      ${data.map((d,i)=>`<circle cx="${padL+i*stepX}" cy="${padT+h-(d/max)*h}" r="3" fill="var(--bg-elev)" stroke="${color}" stroke-width="2"/>`).join('')}`;
+  }
+  lineChart('forecastChart', [64,66,68,71,74,76,79], 'var(--accent)');
+  lineChart('historyChart', [58,60,57,61,63,62,65,67,64,66,68,70,69,71,68], 'var(--accent)', 90);
+
+  /* ---------------- Sector list ---------------- */
+  const sectors = [
+    {n:'Sector 1', v:42, r:'safe'}, {n:'Sector 2', v:55, r:'safe'},
+    {n:'Sector 3', v:68, r:'caution'}, {n:'Sector 4', v:81, r:'danger'},
+    {n:'Sector 5', v:39, r:'safe'}, {n:'Sector 6', v:60, r:'caution'}
+  ];
+  const sectorList = document.getElementById('sectorList');
+  sectors.forEach(s=>{
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border-soft)';
+    row.innerHTML = `<div style="width:78px;font-size:12.5px;color:var(--text-dim)">${s.n}</div>
+      <div style="flex:1;height:6px;border-radius:3px;background:var(--bg-elev-3);overflow:hidden;">
+        <div style="width:${s.v}%;height:100%;background:var(--${s.r})"></div>
+      </div>
+      <div style="width:34px;text-align:right;font-family:var(--font-mono);font-size:12px;">${s.v}%</div>`;
+    sectorList.appendChild(row);
+  });
+
+  /* ---------------- Iceberg table ---------------- */
+  const bergs = [
+    {id:'B-2214', pos:'−65.21, 72.84', size:'Large (tabular)', drift:'1.8 km/h NE', risk:'danger', label:'High', speed:'1.8 km/h NE', prob:'72% within 24h', radius:'± 4.1 km'},
+    {id:'B-2201', pos:'−65.44, 73.10', size:'Medium', drift:'1.2 km/h E', risk:'caution', label:'Moderate', speed:'1.2 km/h E', prob:'34% within 48h', radius:'± 3.2 km'},
+    {id:'B-2198', pos:'−64.98, 71.55', size:'Small (bergy bit)', drift:'0.6 km/h SE', risk:'safe', label:'Low', speed:'0.6 km/h SE', prob:'8% within 72h', radius:'± 1.5 km'},
+    {id:'B-2233', pos:'−66.02, 74.20', size:'Large (tabular)', drift:'2.1 km/h N', risk:'danger', label:'High', speed:'2.1 km/h N', prob:'65% within 24h', radius:'± 5.0 km'},
+    {id:'B-2189', pos:'−65.70, 70.90', size:'Medium', drift:'0.9 km/h NE', risk:'caution', label:'Moderate', speed:'0.9 km/h NE', prob:'28% within 48h', radius:'± 2.8 km'},
+    {id:'B-2177', pos:'−64.60, 72.30', size:'Small (growler)', drift:'0.4 km/h S', risk:'safe', label:'Low', speed:'0.4 km/h S', prob:'5% within 72h', radius:'± 1.1 km'}
+  ];
+  const bergTable = document.getElementById('bergTable');
+  function renderBergs(){
+    bergTable.innerHTML='';
+    bergs.forEach((b,i)=>{
+      const tr=document.createElement('tr');
+      tr.className='row'+(i===0?' selected':'');
+      tr.innerHTML = `<td>${b.id}</td><td class="mono">${b.pos}</td><td>${b.size}</td><td class="mono">${b.drift}</td><td><span class="badge ${b.risk}">${b.label}</span></td>`;
+      tr.addEventListener('click', ()=>selectBerg(i));
+      bergTable.appendChild(tr);
+    });
+  }
+  function selectBerg(i){
+    document.querySelectorAll('#bergTable tr').forEach(r=>r.classList.remove('selected'));
+    document.querySelectorAll('#bergTable tr')[i].classList.add('selected');
+    const b = bergs[i];
+    document.getElementById('bergDetailTitle').textContent = b.id;
+    const badge = document.getElementById('bergDetailBadge');
+    badge.className = 'badge ' + b.risk;
+    badge.textContent = b.label + ' risk';
+    document.getElementById('bergCoord').textContent = b.pos;
+    document.getElementById('bergSpeed').textContent = b.speed;
+    document.getElementById('bergProb').textContent = b.prob;
+    document.getElementById('bergRadius').textContent = b.radius;
+    drawTrajectory(b.risk);
+  }
+  function drawTrajectory(riskLevel){
+    const svg = document.getElementById('bergTrajChart');
+    const color = `var(--${riskLevel})`;
+    const pts = [[40,150],[80,120],[130,100],[190,70],[250,50]];
+    let path='M'+pts.map(p=>p.join(',')).join(' L');
+    let cone = `M${pts[0][0]},${pts[0][1]-8} `;
+    pts.forEach((p,i)=>{ cone += `L${p[0]},${p[1]-8-i*4} `; });
+    for(let i=pts.length-1;i>=0;i--){ cone += `L${pts[i][0]},${pts[i][1]+8+i*4} `; }
+    cone += 'Z';
+    svg.innerHTML = `
+      <path d="${cone}" fill="${color}" opacity="0.1"/>
+      <path d="${path}" fill="none" stroke="${color}" stroke-width="2" stroke-dasharray="5 4"/>
+      ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="${i===0?5:3}" fill="${i===0?color:'var(--bg-elev)'}" stroke="${color}" stroke-width="2"/>`).join('')}
+      <text x="40" y="170" class="chart-axis-label">now</text>
+      <text x="230" y="40" class="chart-axis-label">+72h</text>`;
+  }
+  renderBergs();
+  selectBerg(0);
+
+  /* ---------------- Route map ---------------- */
+  const routeMap = document.getElementById('routeMap');
+  routeMap.innerHTML = `
+    <rect x="0" y="0" width="560" height="300" fill="var(--bg-elev-2)"/>
+    <rect x="300" y="60" width="130" height="110" rx="8" fill="var(--danger)" opacity="0.14"/>
+    <rect x="150" y="170" width="90" height="70" rx="8" fill="var(--caution)" opacity="0.14"/>
+    <circle cx="60" cy="240" r="6" fill="var(--text)"/>
+    <text x="72" y="244" class="chart-axis-label" fill="var(--text-dim)">Start</text>
+    <circle cx="500" cy="60" r="6" fill="var(--text)"/>
+    <text x="440" y="46" class="chart-axis-label" fill="var(--text-dim)">Destination</text>
+    <path d="M60,240 C 200,200 280,140 500,60" fill="none" stroke="var(--danger)" stroke-width="2.5" stroke-dasharray="6 5"/>
+    <path d="M60,240 C 140,180 180,60 500,60" fill="none" stroke="var(--safe)" stroke-width="3"/>
+    <text x="250" y="182" class="chart-axis-label" fill="var(--danger)">Route A</text>
+    <text x="180" y="110" class="chart-axis-label" fill="var(--safe)">Route B</text>
+    <text x="330" y="80" class="chart-axis-label" fill="var(--danger)">High-risk zone</text>
+    <text x="155" y="195" class="chart-axis-label" fill="var(--caution)">Moderate zone</text>`;
+
+  /* ---------------- Route sliders ---------------- */
+  const wTime=document.getElementById('wTime'), wFuel=document.getElementById('wFuel'), wSafe=document.getElementById('wSafe');
+  function updateWeights(){
+    document.getElementById('wTimeVal').textContent = wTime.value;
+    document.getElementById('wFuelVal').textContent = wFuel.value;
+    document.getElementById('wSafeVal').textContent = wSafe.value;
+    const t=+wTime.value, f=+wFuel.value, s=+wSafe.value;
+    const rec = document.getElementById('recommendedRoute');
+    const reason = document.getElementById('recommendedReason');
+    if(s >= t && s >= f){
+      rec.textContent='Route B'; rec.style.color='var(--accent)';
+      reason.textContent='Weighted toward safety — lowest combined ice and iceberg exposure.';
+    } else if(t > s && t >= f){
+      rec.textContent='Route A'; rec.style.color='var(--caution)';
+      reason.textContent='Weighted toward speed — 1h 40m faster, elevated ice exposure in sectors 4 & 7.';
+    } else {
+      rec.textContent='Route A'; rec.style.color='var(--caution)';
+      reason.textContent='Weighted toward fuel economy — 1.4t lower burn, elevated ice exposure.';
+    }
+  }
+  [wTime,wFuel,wSafe].forEach(el=>el.addEventListener('input', updateWeights));
+  updateWeights();
+
+  /* ---------------- Alerts (shared data + full log) ---------------- */
+  const alertData = [
+    {sev:'danger', title:'Iceberg B-2214 drift accelerating', desc:'Drift speed increased from 1.1 to 1.8 km/h northeast. Now projected to enter the transit corridor within 24 hours.', time:'2026-08-24 · 08:42 UTC'},
+    {sev:'caution', title:'Sea ice concentration rising in sector 4', desc:'Concentration increased 9 points over 12 hours, consistent with forecast. Monitor for corridor narrowing.', time:'2026-08-24 · 06:15 UTC'},
+    {sev:'safe', title:'Route B confirmed clear for next 24h', desc:'Latest satellite pass shows no ice or iceberg contacts along Route B within the forecast window.', time:'2026-08-24 · 03:50 UTC'},
+    {sev:'caution', title:'New iceberg detected — B-2233', desc:'Large tabular iceberg detected via Sentinel-1 SAR pass, drifting north at 2.1 km/h. Added to tracking list.', time:'2026-08-23 · 22:10 UTC'},
+    {sev:'danger', title:'Route A risk score exceeds threshold', desc:'Combined ice and iceberg exposure on Route A crossed the 70% risk threshold. Recommend switching to Route B.', time:'2026-08-23 · 19:05 UTC'},
+    {sev:'safe', title:'Weather window stable for next 48h', desc:'Wind and wave forecasts show no significant deterioration expected through the transit window.', time:'2026-08-23 · 14:30 UTC'}
+  ];
+  const alertsFull = document.getElementById('alertsFull');
+  alertData.forEach(a=>{
+    const item=document.createElement('div');
+    item.className='alert-item';
+    item.innerHTML = `<div class="alert-dot" style="background:var(--${a.sev})"></div>
+      <div class="alert-body">
+        <p class="title">${a.title}</p>
+        <p class="desc">${a.desc}</p>
+        <p class="time">${a.time}</p>
+      </div>`;
+    alertsFull.appendChild(item);
+  });
+</script>
+</body>
+</html>
