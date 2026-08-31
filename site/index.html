@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICEWATCH Demo Site</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="backdrop"></div>
+  <header class="hero">
+    <div class="eyebrow">SIH 2026 • PS 59</div>
+    <h1>ICEWATCH</h1>
+    <p class="hero-copy">
+      A decision-support platform for Antarctic navigation that turns satellite, weather, and iceberg-track data into safer routes, early warnings, and explainable risk insights.
+    </p>
+    <div class="hero-actions">
+      <a href="#demoSection" class="btn primary">Open live demo</a>
+      <a href="#architecture" class="btn">View architecture</a>
+      <a href="#datasets" class="btn">Inspect data</a>
+    </div>
+    <div class="hero-stats" id="heroStats"></div>
+  </header>
+
+  <main class="shell">
+    <section class="panel" id="pitch">
+      <div class="panel-head">
+        <h2>Pitch summary</h2>
+        <p>What judges should remember</p>
+      </div>
+      <div class="pitch-grid" id="pitchGrid"></div>
+    </section>
+
+    <section class="panel" id="problem">
+      <div class="panel-head">
+        <h2>Problem statement</h2>
+        <p>What the hackathon asks us to solve</p>
+      </div>
+      <div class="callout">
+        <p>
+          Build an AI-enabled Antarctic sea-ice, iceberg trajectory, and navigation decision-support system that combines satellite imagery, weather/ocean data, forecasting, and risk-aware route optimization.
+        </p>
+      </div>
+      <div class="pill-row" id="problemPills"></div>
+    </section>
+
+    <section class="grid-2">
+      <article class="panel">
+        <div class="panel-head">
+          <h2>What it shows</h2>
+          <p>Pitch-friendly story for judges</p>
+        </div>
+        <ul class="feature-list">
+          <li>Sea-ice concentration and short-range change</li>
+          <li>Iceberg tracks with 6h, 12h, 24h, and 3-day forecasts</li>
+          <li>Risk map over a route graph with safe-path recommendations</li>
+          <li>Explainable alerts, confidence, and fallback physics baseline</li>
+        </ul>
+      </article>
+      <article class="panel">
+        <div class="panel-head">
+          <h2>How it works</h2>
+          <p>End-to-end pipeline</p>
+        </div>
+        <ol class="workflow" id="workflow"></ol>
+      </article>
+    </section>
+
+    <section class="panel" id="architecture">
+      <div class="panel-head">
+        <h2>System architecture</h2>
+        <p>Data in, intelligence out</p>
+      </div>
+      <div class="arch-grid" id="archGrid"></div>
+    </section>
+
+    <section class="grid-2" id="demoSection">
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Model output</h2>
+          <p>Generated from local track data</p>
+        </div>
+        <div class="demo-block" id="demoSummary"></div>
+      </article>
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Alerts</h2>
+          <p>What the captain would see</p>
+        </div>
+        <div class="demo-block" id="demoAlerts"></div>
+      </article>
+    </section>
+
+    <section class="panel" id="datasets">
+      <div class="panel-head">
+        <h2>Local datasets</h2>
+        <p>What is already in this repo</p>
+      </div>
+      <div class="metric-row" id="datasetMetrics"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Columns</th>
+              <th>Preview</th>
+            </tr>
+          </thead>
+          <tbody id="datasetTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="routes">
+      <div class="panel-head">
+        <h2>Route comparison</h2>
+        <p>Safe-path selection for the demo voyage</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Route</th>
+              <th>Distance km</th>
+              <th>Risk</th>
+              <th>ETA h</th>
+            </tr>
+          </thead>
+          <tbody id="routeTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Resources to pitch with</h2>
+          <p>External references and benchmarks</p>
+        </div>
+        <div class="resource-list" id="resources"></div>
+      </article>
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Key features</h2>
+          <p>What we can demo confidently</p>
+        </div>
+        <div class="feature-grid" id="featureGrid"></div>
+      </article>
+    </section>
+
+    <section class="panel" id="fileMap">
+      <div class="panel-head">
+        <h2>Repository map</h2>
+        <p>Useful files to keep working from</p>
+      </div>
+      <div class="file-grid">
+        <a class="file-card" href="../PS.pdf">
+          <span class="file-kind">PDF</span>
+          <strong>SIH 2026 problem statement</strong>
+          <small>Source of truth for scope and acceptance.</small>
+        </a>
+        <a class="file-card" href="../antarctic-nav-dashboard-redesigned.html">
+          <span class="file-kind">HTML</span>
+          <strong>Dashboard prototype</strong>
+          <small>Existing visual direction for the demo UI.</small>
+        </a>
+        <a class="file-card" href="../iceberg.ipynb">
+          <span class="file-kind">Notebook</span>
+          <strong>Iceberg analysis notebook</strong>
+          <small>Trajectory exploration and spatial analysis.</small>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>

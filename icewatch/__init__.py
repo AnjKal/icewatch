@@ -1,0 +1,2 @@
+"""ICEWATCH core package."""
+

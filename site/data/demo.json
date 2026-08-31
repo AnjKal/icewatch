@@ -1,0 +1,92 @@
+{
+  "dataset": {
+    "track_file": "b09b.csv",
+    "track_points": 11033,
+    "first_date": 1989225,
+    "last_date": 2022115,
+    "sources": [
+      "ascat",
+      "ers",
+      "nic",
+      "qscat"
+    ]
+  },
+  "sea_ice": {
+    "center": {
+      "lat": -66.8925,
+      "lon": 146.9053
+    },
+    "spread": 32.657,
+    "ice_concentration_index": 0.41,
+    "trend": "rising"
+  },
+  "forecast": [
+    {
+      "horizon_hours": 6,
+      "lat": -66.2382,
+      "lon": 143.5861,
+      "confidence": 0.32
+    },
+    {
+      "horizon_hours": 12,
+      "lat": -66.2382,
+      "lon": 143.5861,
+      "confidence": 0.29
+    },
+    {
+      "horizon_hours": 24,
+      "lat": -66.2382,
+      "lon": 143.5861,
+      "confidence": 0.23
+    },
+    {
+      "horizon_hours": 72,
+      "lat": -66.2382,
+      "lon": 143.5861,
+      "confidence": 0.1
+    }
+  ],
+  "routes": [
+    {
+      "name": "Route A",
+      "distance_km": 412,
+      "risk": 0.72,
+      "eta_hours": 31.2,
+      "anchor_lat": -66.2382,
+      "anchor_lon": 143.5861
+    },
+    {
+      "name": "Route B",
+      "distance_km": 468,
+      "risk": 0.33,
+      "eta_hours": 35.4,
+      "anchor_lat": -66.2382,
+      "anchor_lon": 143.5861
+    },
+    {
+      "name": "Route C",
+      "distance_km": 435,
+      "risk": 0.51,
+      "eta_hours": 33.1,
+      "anchor_lat": -66.2382,
+      "anchor_lon": 143.5861
+    }
+  ],
+  "alerts": [
+    {
+      "severity": "danger",
+      "title": "Iceberg trajectory enters transit window",
+      "detail": "b09b.csv now projects into the risk corridor within 24 hours."
+    },
+    {
+      "severity": "caution",
+      "title": "Sea-ice index trending upward",
+      "detail": "Weighted sea-ice risk is rising in the current sector."
+    },
+    {
+      "severity": "safe",
+      "title": "Route B remains the safest option",
+      "detail": "Lower combined risk despite slightly longer travel distance."
+    }
+  ]
+}

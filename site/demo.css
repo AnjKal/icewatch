@@ -1,0 +1,7 @@
+.demo-block{display:grid;gap:14px}
+.demo-card{padding:16px;border:1px solid rgba(138,168,209,.14);border-radius:16px;background:rgba(255,255,255,.03)}
+.demo-card h3{margin:0 0 8px;font-family:var(--font-display)}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-family:var(--font-mono);margin-bottom:10px}
+.badge.safe{color:var(--accent-2);background:rgba(123,219,178,.09)}
+.badge.caution{color:var(--warn);background:rgba(240,195,106,.09)}
+.badge.danger{color:#ff8e93;background:rgba(255,142,147,.08)}
